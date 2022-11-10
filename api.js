@@ -1,6 +1,6 @@
 const express = require('express')
 const { response } = require('express');
-const port = 3002// local:3002 servidor: process.env.PORT
+const port =process.env.PORT // local:3002 servidor: process.env.PORT
 const app = express()
 const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
@@ -48,7 +48,7 @@ app.post('/usuario', (req,response) => {
         usuario: req.body.usuario, 
         telefone: req.body.telefone,
         senha: criptografar(req.body.senha),
-        tipo: req.body.tipo
+      
     } 
     console.log(novosDados.senha);
     dbo.collection("usuario").insertOne(novosDados).then(() => {
