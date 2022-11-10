@@ -1,6 +1,6 @@
 const express = require('express')
 const { response } = require('express');
-const port =  process.env.PORT// local:3002 servidor: process.env.PORT
+const port = 3002// local:3002 servidor: process.env.PORT
 const app = express()
 const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
@@ -11,9 +11,9 @@ app.use(express.json());
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectId;
 
-var DATABASE_URL  = "mongodb+srv://godinis22:36731249@teste.sncrx1j.mongodb.net/?retryWrites=true&w=majority";
+var DATABASE_URL  = "mongodb+srv://gladson:comentar6507@cluster0.zup2n.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(DATABASE_URL)
-var dbo = client.db("gestao") 
+var dbo = client.db("PortalRobo") 
 
 const DADOS_CRIPTOGRAFAR = {
     algoritmo : "aes256",
@@ -43,9 +43,10 @@ app.put('/usuario/:id', verifyJWT, (req,response) => {
     }))     
 })
 
-app.post('/usuario', verifyJWT, (req,response) => {
+app.post('/usuario', (req,response) => {
     const novosDados = {
         usuario: req.body.usuario, 
+        telefone: req.body.telefone,
         senha: criptografar(req.body.senha),
         tipo: req.body.tipo
     } 
@@ -94,7 +95,7 @@ app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
     })
   }
 
-  app.get('/sistemas',verifyJWT, (req,response) => {
+  app.get('/RobosUsuario',verifyJWT, (req,response) => {
     
     var query = { $and: [] };
 
@@ -109,8 +110,8 @@ app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
         query = {}
         console.log(`usuario: ${req.query.usuario} descricao: ${req.query.descricao} senha: ${req.query.senha}`);
     }
-        dbo.collection("sistema").find(query).count().then(count=>{
-            dbo.collection("sistema").find(query).skip(skip).limit(limit).toArray().then((data => {
+        dbo.collection("RobosUsuario").find(query).count().then(count=>{
+            dbo.collection("RobosUsuario").find(query).skip(skip).limit(limit).toArray().then((data => {
                 response.json({data, total: count % limit == 0 ? count/limit : (Math.floor(count/limit)) + 1 })    
             }))      
             
@@ -119,14 +120,14 @@ app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
   })
 
 
-  app.get('/sistema/:id',verifyJWT, (req,response) => {
+  app.get('/RobosUsuario/:id',verifyJWT, (req,response) => {
     const query = {_id :  ObjectID.createFromHexString(req.params.id)}
-    dbo.collection("sistema").findOne(query).then((data) => {
+    dbo.collection("RobosUsuario").findOne(query).then((data) => {
     response.json(data) 
   })
 })
 
-  app.put('/sistema/:id', verifyJWT, (req,response) => {
+  app.put('/RobosUsuario/:id', verifyJWT, (req,response) => {
     console.log("teste1");
 
     const query = {_id :  ObjectID.createFromHexString(req.params.id)}  
@@ -137,25 +138,25 @@ app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
     } 
 };
         console.log("teste");
-        dbo.collection("sistema").updateOne(query, novosDados).then(response.json(req.body))     
+        dbo.collection("RobosUsuario").updateOne(query, novosDados).then(response.json(req.body))     
 })
 
-app.post('/sistema', verifyJWT, (req,response) => {
+app.post('/RobosUsuario', verifyJWT, (req,response) => {
             const novosDados = {
                 descricao: req.body.descricao,
                 usuario: req.body.usuario, 
                 senha: req.body.senha
             } 
            
-            dbo.collection("sistema").insertOne(novosDados).then(() => {
+            dbo.collection("RobosUsuario").insertOne(novosDados).then(() => {
                 response.json(req.body)
            })   
     })
 
-  app.delete('/sistema/:id', verifyJWT,(req, response) => {
+  app.delete('/RobosUsuario/:id', verifyJWT,(req, response) => {
         const query = {_id :  ObjectID.createFromHexString(req.params.id)}
 
-        dbo.collection("sistema").deleteOne(query).then(() => {
+        dbo.collection("RobosUsuario").deleteOne(query).then(() => {
         response.json("Excluído com Sucesso!") 
     })   
 })
