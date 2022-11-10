@@ -1,6 +1,6 @@
 const express = require('express')
 const { response } = require('express');
-const port =process.env.PORT // local:3002 servidor: process.env.PORT
+const port = process.env.PORT // local:3002 servidor: process.env.PORT
 const app = express()
 const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
@@ -134,7 +134,9 @@ app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
     const novosDados = { $set: {
         usuario: req.body.usuario, 
         senha: req.body.senha,
-        descricao: req.body.descricao
+        descricao: req.body.descricao,
+        qtdInicial : req.body.qtdInicial,
+        qtdFinal: req.body.qtdFinal
     } 
 };
         console.log("teste");
@@ -145,7 +147,9 @@ app.post('/RobosUsuario', verifyJWT, (req,response) => {
             const novosDados = {
                 descricao: req.body.descricao,
                 usuario: req.body.usuario, 
-                senha: req.body.senha
+                senha: req.body.senha,
+                qtdInicial : req.body.qtdInicial,
+                qtdFinal: req.body.qtdFinal
             } 
            
             dbo.collection("RobosUsuario").insertOne(novosDados).then(() => {
