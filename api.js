@@ -29,6 +29,8 @@ function criptografar(senha) {
     return cipher.final(DADOS_CRIPTOGRAFAR.tipo);
 };
 
+var cors = require('cors');
+app.use(cors())
    
 app.put('/usuario/:id', verifyJWT, (req,response) => {
     const query = {_id :  ObjectID.createFromHexString(req.params.id)}
