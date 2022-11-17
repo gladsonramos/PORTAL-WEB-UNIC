@@ -8,6 +8,8 @@ const SECRET = 'ALESSANDRO'
 var payload = {}
 app.use(express.json());
 
+
+
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectId;
 
@@ -26,6 +28,9 @@ function criptografar(senha) {
     cipher.update(senha);
     return cipher.final(DADOS_CRIPTOGRAFAR.tipo);
 };
+
+const cors = require('cors');
+app.use(cors())
    
 app.put('/usuario/:id', verifyJWT, (req,response) => {
     const query = {_id :  ObjectID.createFromHexString(req.params.id)}
