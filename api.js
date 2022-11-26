@@ -1,12 +1,22 @@
-const express = require('express')
+const express = require('express');
+const  bodyParser  =  require( 'body-parser' );
 const { response } = require('express');
-const port = process.env.PORT // local:3002 servidor: process.env.PORT
+const port =  3002// local:3002 servidor: process.env.PORT
 const app = express()
 const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
 const SECRET = 'ALESSANDRO'
 var payload = {}
 app.use(express.json());
+
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json());
+
+
+
+app.listen((req,res) =>{
+    console.log("servidor Rodando")
+})
 
 
 
@@ -30,6 +40,7 @@ function criptografar(senha) {
 };
 
 var cors = require('cors');
+
 app.use(cors())
    
 app.put('/usuario/:id', verifyJWT, (req,response) => {
@@ -62,15 +73,18 @@ app.post('/usuario', (req,response) => {
 })
 
 app.post('/login',(req,response) => {
+    console.log(req.body)
     const pass = criptografar(req.body.senha)
     //const pass = descriptografar(encript)
     console.log('senha descrip... '+JSON.stringify(pass));
+ 
     dbo.collection("usuario").findOne({usuario: req.body.usuario, senha: pass}).then(data => {
         console.log('retorno '+data); 
         if(data != null)
         {
             const token = jwt.sign({usuario: data._id} , SECRET, {expiresIn: 1000})
             response.json({data, auth: true, token})
+            console.log(response)
         }
         else {
 
@@ -81,7 +95,7 @@ app.post('/login',(req,response) => {
 
 })
 
-app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN COM JWT V10")} )
+app.get('/' ,(req, res) => {res.send("BEM VINDO A API DE LOGIN")} )
 
   app.listen(port, function() {
     console.log(`Server is running at localhost:${port}`)
